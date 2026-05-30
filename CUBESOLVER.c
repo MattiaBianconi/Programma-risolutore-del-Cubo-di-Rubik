@@ -46,24 +46,25 @@ void insert_cube(){
         "SINISTRA   (Arancione - 4)",
         "DESTRA     (Rosso - 5)"
     };
+    int f, r, c;
     printf("=== INSERIMENTO COLORI DEL CUBO ===\n");
     printf("Usa i numeri da 0 a 5 per i colori:\n");
     printf("0=Giallo, 1=Bianco, 2=Blu, 3=Verde, 4=Arancione, 5=Rosso\n\n");
-    for (int f = 0; f < 6; f++) {
+    for (f=0;f<6;f++){
         printf("--------------------------------------------------\n");
         printf("Stai inserendo i colori per la faccia: %s\n", nomi_facce[f]);
         printf("Inserisci i quadratini riga per riga (da sinistra a destra, dall'alto in basso):\n");
         printf("--------------------------------------------------\n");
-        for (int r=0;r<3;r++) {
-            for (int c=0;c<3;c++) {
+        for (r=0;r<3;r++){
+            for (c=0;c<3;c++){
                 int colore_inserito = -1;
-                while (colore_inserito < 0 || colore_inserito > 5) {
+                while (colore_inserito < 0 || colore_inserito > 5){
                     printf("Quadratino [Riga %d][Colonna %d]: ", r+1, c+1);
                     if (scanf("%d", &colore_inserito) != 1) {
                         while (getchar() != '\n'); 
                         colore_inserito = -1;
                     }
-                    if (colore_inserito < 0 || colore_inserito > 5) {
+                    if (colore_inserito < 0 || colore_inserito > 5){
                         printf("[ERRORE] Numero non valido! Inserisci un valore compreso tra 0 e 5.\n");
                     }
                 }
@@ -153,7 +154,7 @@ void mossa_B(){ // MOSSA DIETRO ORARIO (BACK)-----------------------------------
 	int temp_cornice[3];
 	for(i=0;i<3;i++){
 		for(j=0;j<3;j++){
-			temp_face[2-j][i]=cube[3][i][j];
+			temp_face[j][2-i]=cube[3][i][j];
 		}
 	}
 	for(i=0;i<3;i++){
@@ -184,7 +185,7 @@ void mossa_B_S(){ // mossa orario senza stampa(da mettere in B') (BACK)---------
 	int temp_cornice[3];
 	for(i=0;i<3;i++){
 		for(j=0;j<3;j++){
-			temp_face[2-j][i]=cube[3][i][j];
+			temp_face[j][2-i]=cube[3][i][j];
 		}
 	}
 	for(i=0;i<3;i++){
@@ -221,7 +222,7 @@ void mossa_R(){ //MOSSA DESTRA ORARIO (RIGHT)-----------------------------------
 	// ROTAZIONE FACCIA ROSSA
 	for(i=0;i<3;i++){
 		for(j=0;j<3;j++){
-			temp_face[2-j][i]=cube[5][i][j];
+			temp_face[j][2-i]=cube[5][i][j];
 		}
 	}
 	for(i=0;i<3;i++){
@@ -253,7 +254,7 @@ void mossa_R_S(){
 	int temp_cornice[3];
 	for(i=0;i<3;i++){
 		for(j=0;j<3;j++){
-			temp_face[2-j][i]=cube[5][i][j];
+			temp_face[j][2-i]=cube[5][i][j];
 		}
 	}
 	for(i=0;i<3;i++){
@@ -358,7 +359,7 @@ void mossa_U(){ // MOSSA SU ORARIO (UP)-----------------------------------------
 	int temp_cornice[3];
 	for(i=0;i<3;i++){
 		for(j=0;j<3;j++){
-			temp_face[2-j][i]=cube[0][i][j];
+			temp_face[j][2-i]=cube[0][i][j];
 		}
 	}
 	for(i=0;i<3;i++){
@@ -389,7 +390,7 @@ void mossa_U_S(){
 	int temp_cornice[3];
 	for(i=0;i<3;i++){
 		for(j=0;j<3;j++){
-			temp_face[2-j][i]=cube[0][i][j];
+			temp_face[j][2-i]=cube[0][i][j];
 		}
 	}
 	for(i=0;i<3;i++){
@@ -425,7 +426,7 @@ void mossa_D(){ // MOSSA DOWN ORARIO (D)----------------------------------------
 	int temp_cornice[3];
 	for(i=0;i<3;i++){
 		for(j=0;j<3;j++){
-			temp_face[2-j][i]=cube[1][i][j];
+			temp_face[j][2-i]=cube[1][i][j];
 		}
 	}
 	for(i=0;i<3;i++){
@@ -456,7 +457,7 @@ void mossa_D_S(){
 	int temp_cornice[3];
 	for(i=0;i<3;i++){
 		for(j=0;j<3;j++){
-			temp_face[2-j][i]=cube[1][i][j];
+			temp_face[j][2-i]=cube[1][i][j];
 		}
 	}
 	for(i=0;i<3;i++){
@@ -511,7 +512,7 @@ void sm_orange(){ // MOSSA SEXYMOVE (sulla faccia arancione) (primo algoritmo)
 	mossa_U_primo();
 }
 
-void antism_blue(){ // MOSSA ANTISEXYMOVE (sulla faccia blu)(R U R' U')_____________________________________
+void antism_blue(){ // MOSSA ANTISEXYMOVE (sulla faccia blu)(L' U' L U)_____________________________________
 	mossa_L_primo();
 	mossa_U_primo();
 	mossa_L();
@@ -751,8 +752,8 @@ void solve_w_blue(){ // RISOLUZIONE SPIGOLO BIANCO-BLU
 		     mossa_D();
 	}else if(cube[3][1][2]==2 && cube[4][1][0]==1){
 		     mossa_B();
-    	     mossa_U();
-    	     mossa_U();		     
+    	     mossa_D();
+    	     mossa_D();		     
     }else if(cube[2][0][1]==2 && cube[0][2][1]==1){ // spigoli di sopra
         	 mossa_F();
         	 mossa_F();
@@ -846,10 +847,9 @@ void solve_w_red(){ // RISOLUZIONE SPIGOLO BIANCO-ROSSO
 		mossa_D();
 		mossa_D();
 	}else if(cube[2][0][1]==5 && cube[0][2][1]==1){  // spigoli di sopra
-		mossa_D_primo();
-		mossa_F();
-		mossa_F();
-		mossa_D();
+		mossa_U_primo();
+		mossa_R();
+		mossa_R();
 	}else if(cube[2][0][1]==1 && cube[0][2][1]==5){
 		mossa_D_primo();
 		mossa_F();
@@ -862,7 +862,7 @@ void solve_w_red(){ // RISOLUZIONE SPIGOLO BIANCO-ROSSO
 		mossa_R_primo();
 		mossa_D_primo();
 		mossa_F();
-		mossa_D();	
+		mossa_D();  	
 	}else if(cube[3][0][1]==5 && cube[0][0][1]==1){
 		mossa_U();
 		mossa_R();
@@ -877,7 +877,7 @@ void solve_w_red(){ // RISOLUZIONE SPIGOLO BIANCO-ROSSO
 		mossa_R();
 	}else if(cube[4][0][1]==1 && cube[0][1][0]==5){
 		mossa_L();
-		mossa_U_primo();
+		mossa_D_primo();
 		mossa_F_primo();
 		mossa_D();
     }
@@ -1376,9 +1376,12 @@ void solve_middle_edges(){
 }
 int main(){
 	char cubo[6][3][3];
+	printf("================================================================\n\n");
+	printf(">>BENVENUTO NEL MIO PROGRAMMA RISOLUTORE DEL CUBO DI RUBIK!!!<<\n\n");
+	printf("================================================================\n\n");
 	insert_cube();
 	printf("-----RISOLUZIONE CUBO:-----\n");
 	solve_white_cross();
-    solve_white_corners();
+	solve_white_corners();
 	return 0;
 }
